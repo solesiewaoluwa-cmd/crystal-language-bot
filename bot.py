@@ -1,4 +1,5 @@
 import os
+import threading
 import random
 import difflib
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -445,6 +446,25 @@ app = ApplicationBuilder().token(BOT_TOKEN).request(request).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button_handler))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+def run_dummy_server():
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+    port = int(os.environ.get("PORT", 10000))
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"Bot is running")
+
+        def log_message(self, format, *args):
+            pass
+
+    server = HTTPServer(("0.0.0.0", port), Handler)
+    server.serve_forever()
+
+
+threading.Thread(target=run_dummy_server, daemon=True).start()
 
 print("Bot running...")
 app.run_polling(drop_pending_updates=True)
