@@ -1,3 +1,4 @@
+import os
 import random
 import difflib
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -8,7 +9,7 @@ from telegram.ext import (
 from telegram.request import HTTPXRequest
 from telegram.error import BadRequest, TimedOut, NetworkError
 
-BOT_TOKEN = "PLACEHOLDER"
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 # =========================
 # LANGUAGES
